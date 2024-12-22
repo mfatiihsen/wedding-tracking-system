@@ -1,0 +1,189 @@
+/* Genel Stil */
+body {
+  font-family: "Roboto", sans-serif;
+  background-color: #f4f7fc;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  color: #333;
+}
+
+main {
+  padding-top: 60px;
+  padding-bottom: 60px;
+}
+
+header {
+  text-align: center;
+  background-color: #3b82f6;
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  font-size: 2em;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+.event-detail-container {
+  flex-direction: column;
+  display: flex;
+  margin-left: 220px;
+}
+
+#calender-detail {
+  width: calc(100%-220px);
+}
+
+#month-name {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+#events {
+  width: 100%;
+  padding: 30px 0;
+  background-color: white;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  margin-top: 20px;
+}
+#events:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Etkinlik başlığı */
+#events h2 {
+  font-size: 2em;
+  color: #333;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 600;
+}
+
+table {
+  width: 100%; /* Tabloyu sayfa genişliğine yaymak için */
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th,
+td {
+  padding: 15px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+th {
+  background-color: #3b82f6;
+  color: white;
+  font-size: 1.1em;
+}
+
+td {
+  background-color: #f9f9f9;
+  color: #555;
+  font-size: 1em;
+}
+
+tr:hover {
+  background-color: #f1f1f1;
+  transform: translateY(-3px);
+  transition: all 0.3s ease;
+}
+
+.details-btn {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  font-size: 1em;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.details-btn:hover {
+  background-color: #fff;
+  color: #3b82f6;
+  border: 1px solid #3b82f6;
+}
+
+/* Modal Arka Planı */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7); /* Yarı şeffaf siyah arka plan */
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Modal İçeriği */
+.modal-content {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 600px;
+  width: 90%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+/* Modal Başlık */
+#modal-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+/* Modal Kapatma Butonu */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 30px;
+  font-weight: bold;
+  color: #aaa;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+  color: #333;
+}
+
+/* Modal İçeriği */
+#modal-content {
+  font-size: 16px;
+  color: #555;
+}
+
+
+/* Etkinlik Detayları - Kart Stilinde */
+.event-detail {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 25px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.event-detail h3 {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.event-detail p {
+    font-size: 16px;
+    color: #777;
+}

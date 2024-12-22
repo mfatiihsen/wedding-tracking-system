@@ -1,0 +1,35 @@
+
+
+
+#calendar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 20px;
+    margin: 0 auto;
+    width: calc(100% - 220px);
+}
+
+.month {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 150px;
+    background-color: #007BFF;
+    color: white;
+    font-size: 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-align: center;
+    padding: 10px;
+    box-sizing: border-box;
+    text-decoration: none;
+}
+
+.month:hover {
+    background-color: #0056b3;
+}
+
+
+

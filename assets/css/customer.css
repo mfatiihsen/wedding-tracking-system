@@ -1,0 +1,97 @@
+
+
+header {
+  text-align: center;
+  background-color: #3b82f6;
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  font-size: 2em;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+/* Tablo Stili */
+.customer-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 20px;
+}
+
+.customer-table thead {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.customer-table th,
+.customer-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.customer-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Detay Butonu */
+.details-customer-btn {
+  padding: 8px 15px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease-in;
+}
+
+.details-customer-btn:hover {
+  background-color: #fff;
+  color: #3b82f6;
+  border: 1px solid #3b82f6;
+}
+
+/* Responsive Tasarım */
+@media (max-width: 768px) {
+  .container {
+    padding: 20px;
+  }
+
+  .customer-table {
+    font-size: 14px;
+  }
+
+  .customer-table th,
+  .customer-table td {
+    padding: 10px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  .details-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .customer-table th,
+  .customer-table td {
+    padding: 8px;
+  }
+
+  h2 {
+    font-size: 18px;
+  }
+
+  .details-btn {
+    font-size: 12px;
+  }
+}
