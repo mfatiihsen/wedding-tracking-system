@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     </div>
                     <div class="form-group">
                         <label for="start_date">İşe Giriş Tarihi:</label>
-                        <input type="date" id="start_date" name="start_date" required>
+                        <input type="date" id="start_date" name="start_date" required readonly>
                     </div>
                 </div>
                 <button class="btn-person" type="submit">Ekle</button>

@@ -11,6 +11,27 @@
         </div>
     </div>
     <div class="has-dropdown">
+        <a href="#" onclick="toggleDropdown(event)"><i class="fas fa-concierge-bell"></i>Hizmetler <i class="fas fa-chevron-down arrow"></i></a>
+        <div class="dropdown">
+            <a href="../pages/services.php">Listele</a>
+            <a href="../pages/service-add.php">Yeni Ekle</a>
+        </div>
+    </div>
+    <div class="has-dropdown">
+        <a href="#" onclick="toggleDropdown(event)"><i class="fas fa-money-bill-wave"></i>Gelir-Gider <i class="fas fa-chevron-down arrow"></i></a>
+        <div class="dropdown">
+            <a href="../pages/candg.php">Listele</a>
+            <a href="../pages/candg-add.php">Yeni Ekle</a>
+        </div>
+    </div>
+    <div class="has-dropdown">
+        <a href="#" onclick="toggleDropdown(event)"><i class="fas fa-truck"></i>Tedarikçiler <i class="fas fa-chevron-down arrow"></i></a>
+        <div class="dropdown">
+            <a href="../pages/supplier.php">Listele</a>
+            <a href="../pages/supplier-add.php">Ekle</a>
+        </div>
+    </div>
+    <div class="has-dropdown">
         <a href="#" onclick="toggleDropdown(event)"><i class="fas fa-user-tie"></i>Personeller <i class="fas fa-chevron-down arrow"></i></a>
         <div class="dropdown">
             <a href="../pages/person.php">Listele</a>

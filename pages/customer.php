@@ -3,6 +3,18 @@ $titile = "Müşteriler";
 ob_start();
 ?>
 
+<?php
+
+require_once '../model/db.php';
+require_once '../class/customer-class.php';
+
+$db = new Database();  // Veritabanı bağlantısını başlat
+$customer = new Musteri($db->conn);  // Personel sınıfını başlat
+
+// Veritabanından tüm personelleri al
+$customerListe = $customer->getAllCustomer();
+?>
+
 
 <div class="main-content">
     <header>
@@ -19,27 +31,19 @@ ob_start();
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>Ali</td>
-                <td>Yılmaz</td>
-                <td>ali.yilmaz@example.com</td>
-                <td>+90 555 123 45 67</td>
-                <td><button class="details-customer-btn">Detaylar</button></td>
-            </tr>
-            <tr>
-                <td>Mehmet</td>
-                <td>Özdemir</td>
-                <td>mehmet.ozdemir@example.com</td>
-                <td>+90 555 234 56 78</td>
-                <td><button class="details-customer-btn">Detaylar</button></td>
-            </tr>
-            <tr>
-                <td>Ayşe</td>
-                <td>Arslan</td>
-                <td>ayse.arslan@example.com</td>
-                <td>+90 555 345 67 89</td>
-                <td><button class="details-customer-btn">Detaylar</button></td>
-            </tr>
+            <?php
+
+            foreach ($customerListe as $customer) {
+                echo "<tr>";
+                echo "<td>" . htmlspecialchars($customer['name']) . "</td>";
+                echo "<td>" . htmlspecialchars($customer['surname']) . "</td>";
+                echo "<td>" . htmlspecialchars($customer['tel']) . "</td>";
+                echo "<td>" . htmlspecialchars($customer['mail']) . "</td>";
+                echo "<td><button class='details-customer-btn'>Detaylar</button></td>";
+                echo "</tr>";
+            }
+
+            ?>
         </tbody>
     </table>
 </div>

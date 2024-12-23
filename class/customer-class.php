@@ -12,21 +12,32 @@ class Musteri
     }
 
     // Müşteri ekleme fonksiyonu
-    public function ekle($adSoyad, $telefon, $email, $dugunTarihi, $adres)
+    public function ekle($name, $surname, $telefon, $email, $adres, $date)
     {
-        $sql = "INSERT INTO musteri (ad_soyad, telefon, email, dugun_tarihi, adres, kayit_tarihi) 
-                VALUES (:ad_soyad, :telefon, :email, :dugun_tarihi, :adres, NOW())";
+        $sql = "INSERT INTO customer (name,surname, tel, mail, adress, request_date) 
+                VALUES (:name, :surname, :tel, :mail, :adress, :request_date)";
         $stmt = $this->db->prepare($sql);
-        $stmt->bindParam(':ad_soyad', $adSoyad);
-        $stmt->bindParam(':telefon', $telefon);
-        $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':dugun_tarihi', $dugunTarihi);
-        $stmt->bindParam(':adres', $adres);
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':surname', $surname);
+        $stmt->bindParam(':tel', $telefon);
+        $stmt->bindParam(':mail', $email);
+        $stmt->bindParam(':adress', $adres);
+        $stmt->bindParam(':request_date', $date);
 
         if ($stmt->execute()) {
             return "Müşteri başarıyla eklendi!";
         } else {
             return "Müşteri eklenirken bir hata oluştu.";
         }
+    }
+
+
+    // Customer verilerini al
+    public function getAllCustomer()
+    {
+        $sql = "SELECT * FROM customer"; // personel tablosundaki tüm verileri alıyoruz
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC); // Verileri döndür
     }
 }

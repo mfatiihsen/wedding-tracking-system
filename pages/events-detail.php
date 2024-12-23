@@ -3,6 +3,20 @@ $title = "Etkinlikler";
 ob_start();
 ?>
 
+<?php
+// // URL'den gelen gün parametresini alıyoruz
+// $day = isset($_GET['day']) ? $_GET['day'] : null;
+
+// // Etkinlik veritabanı bağlantısı (Örnek olarak PDO kullanılıyor)
+// $pdo = new PDO('mysql:host=localhost;dbname=events', 'root', ''); // Veritabanı bağlantınızı yapın
+// $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+// // O güne ait etkinlikleri almak için sorgu
+// $stmt = $pdo->prepare("SELECT * FROM etkinlikler WHERE day = :day");
+// $stmt->execute(['day' => $day]);
+// $events = $stmt->fetchAll();
+?>
+
 
 <main>
 
@@ -10,7 +24,7 @@ ob_start();
 
         <div class="event-detail-container">
             <header>
-                <h1>Etkinlikler - <span id="month-name">Ay</span> 2024</h1>
+                <h1>Etkinlikler - <span id="month-header">Ay</span> 2024</h1>
             </header>
 
             <section id="events">

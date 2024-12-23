@@ -15,4 +15,8 @@
     <link rel="stylesheet" href="../assets/css/login.css">
     <link rel="stylesheet" href="../assets/css/person.css">
     <link rel="stylesheet" href="../assets/css/person-add.css">
+    <link rel="stylesheet" href="../assets/css/services.css">
+    <link rel="stylesheet" href="../assets/css/supplier.css">
+    <link rel="stylesheet" href="../assets/css/candg.css">
+    <link rel="stylesheet" href="../assets/css/candg-add.css">
 </head>
