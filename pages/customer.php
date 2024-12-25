@@ -1,5 +1,5 @@
 <?php
-$titile = "Müşteriler";
+$title = "Müşteriler";
 ob_start();
 ?>
 
@@ -17,8 +17,6 @@ $customerListe = $customer->getAllCustomer();
 
 
 <div class="main-content">
-    <header>
-        <h1>Müşteriler</h1>
     </header>
     <table class="customer-table">
         <thead>

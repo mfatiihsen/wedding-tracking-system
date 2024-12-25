@@ -14,5 +14,13 @@ class Database {
             echo "Bağlantı hatası: " . $e->getMessage();
         }
     }
+
+    public function checkConnection() {
+        if ($this->conn) {
+            return 'Veri Tabanı Aktif';
+        } else {
+            return 'Veri Tabanı Pasif';
+        }
+    }
 }
 ?>

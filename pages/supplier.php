@@ -1,6 +1,36 @@
 <?php
 $title = "Tedarikçiler";
 ob_start();
+?>
+
+<?php
+require_once '../model/db.php';
+require_once '../class/supplier-class.php';
+
+$db = new Database();  // Veritabanı bağlantısını başlat
+$supplier = new Supply($db->conn);  // Personel sınıfını başlat
+
+// Veritabanından tüm personelleri al
+$supplierListe = $supplier->getAllSupply();
+
+
+if (isset($_POST['supplier_id'])) {
+    $supplierId = $_POST['supplier_id'];
+
+    // Hizmeti sil
+    $result = $supplier->delete($supplierId);
+
+    // Sonuç mesajını ekrana yazdır
+    echo $result;
+
+    // Silme işleminden sonra tekrar ana sayfaya yönlendir
+    header("Location: supplier.php");
+    exit();
+} else {
+    echo "Hizmet ID'si bulunamadı!";
+}
+
+
 
 ?>
 
@@ -8,29 +38,21 @@ ob_start();
 
 <div class="main-content">
     <div class="supplier-list">
-        <div class="supplier-card">
-            <h3>Yemek Catering</h3>
-            <p><strong>İletişim:</strong> 0505 123 45 67</p>
-            <p><strong>Hizmetler:</strong> Düğün yemekleri, ikramlar</p>
-            <p><strong>Adres:</strong> İstiklal Caddesi, No: 42</p>
-            <button class="btn">Detaylar</button>
-        </div>
+        <?php
+        foreach ($supplierListe as $supplier) {
+            echo "<div class='supplier-card'>";
+            echo "<h3>" . htmlspecialchars($supplier['sname']) . "</h3>";
+            echo "<p><strong>İletişim:</strong> " . htmlspecialchars($supplier['phone']) . "</p>";
+            echo "<p><strong>Hizmetler:</strong> " . htmlspecialchars($supplier['services']) . "</p>";
+            echo "<p><strong>Adres:</strong> " . htmlspecialchars($supplier['adress']) . "</p>";
+            echo "<form method='POST' action='supplier.php'>";  // Silme işlemi için form başlatıyoruz
+            echo "<input type='hidden' name='supplier_id' value='" . $supplier['id'] . "'>"; // Hizmetin ID'sini gizli alanda tutuyoruz
+            echo "<button class='btn-supplier-delete'>Sil</button>";
+            echo "</form>";
+            echo "</div>";
+        }
+        ?>
 
-        <div class="supplier-card">
-            <h3>Fotoğrafçı XYZ</h3>
-            <p><strong>İletişim:</strong> 0505 234 56 78</p>
-            <p><strong>Hizmetler:</strong> Düğün fotoğrafçılığı, albüm</p>
-            <p><strong>Adres:</strong> Şehir Mahallesi, No: 10</p>
-            <button class="btn">Detaylar</button>
-        </div>
-
-        <div class="supplier-card">
-            <h3>Müzik DJ</h3>
-            <p><strong>İletişim:</strong> 0505 345 67 89</p>
-            <p><strong>Hizmetler:</strong> DJ performansı, ses sistemi</p>
-            <p><strong>Adres:</strong> Bahçe Sokak, No: 15</p>
-            <button class="btn">Detaylar</button>
-        </div>
     </div>
 </div>
 

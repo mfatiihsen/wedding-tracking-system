@@ -17,9 +17,6 @@ $personelListesi = $personel->getAllPersonel();
 ?>
 <div class="main-content">
     <div class="container-person">
-        <header>
-            <h1>Personeller</h1>
-        </header>
         <table class="customer-table">
             <thead>
                 <tr>

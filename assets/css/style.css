@@ -93,12 +93,14 @@ body {
 }
 
 .main-content {
-  padding-top: 60px;
   margin-left: 220px;
   transition: margin-left 0.3s;
+  padding: 60px 0px;
 }
 .main-content.hidden {
   margin-left: 0;
+  margin-top: 0;
+  padding: 0 0;
 }
 
 .navbar {
@@ -126,6 +128,46 @@ body {
   font-size: 1.25rem;
   font-weight: 600;
   text-align: left;
+}
+
+.db-status {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 5px 15px;
+  border-radius: 5px;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+}
+
+/* Bağlantı başarılı (yeşil) */
+.db-status.active {
+  background-color: #2ecc71; /* Yeşil */
+  color: white;
+}
+
+/* Bağlantı başarısız (kırmızı) */
+.db-status.inactive {
+  background-color: #e74c3c; /* Kırmızı */
+  color: white;
+}
+
+/* Durum simgesi (icon) */
+.status-icon {
+  margin-right: 8px;
+  font-size: 18px;
+}
+
+/* Durum metni */
+.status-text {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* İkonları sağlamak için Font Awesome */
+.fas {
+  font-size: 18px;
 }
 
 .btn {
@@ -161,9 +203,21 @@ body {
 }
 
 .hamburger {
-  display: block;
-  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1rem;
   cursor: pointer;
+}
+
+.hamburger i {
+  font-size: 1.5rem;
+}
+
+.hamburger p {
+  font-size: 1rem;
+  color: #333;
+  margin: 0;
 }
 
 .content {
