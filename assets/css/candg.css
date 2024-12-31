@@ -1,0 +1,49 @@
+.container-candg{
+    padding:0 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #3498db;
+    color: white;
+}
+
+table tr:hover {
+    background-color: #ecf0f1;
+}
+
+.income {
+    background-color: #eaf8e4; /* Gelirler için yeşil ton */
+}
+
+.expense {
+    background-color: #f8d7da; /* Giderler için kırmızı ton */
+}
+
+.income td {
+    color: #2ecc71; /* Yeşil renkli yazı */
+}
+
+.expense td {
+    color: #e74c3c; /* Kırmızı renkli yazı */
+}
+
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+    }
+}
