@@ -55,6 +55,25 @@
     background-color: #2980b9;
 }
 
+.btn-services-delete{
+    padding: 8px 15px;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease-in;   
+}
+
+.btn-services-delete:hover{
+    background-color: white;
+    color: red;
+    border: 1px solid red;
+}
+
+
+
 @media (max-width: 768px) {
     .container {
         flex-direction: column;

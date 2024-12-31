@@ -38,7 +38,8 @@ $gelirgiderListesi = $candg->getTransactions();
 
                     // Tutarı para formatında yazdır
                     $formattedAmount = number_format($candg['amount'], 2, ',', '.');
-                    echo "<td>" . "₺" . htmlspecialchars($formattedAmount) . "</td>";
+                    $amountClass = ($candg['type'] == 2) ? 'gider' : 'gelir';
+                    echo "<td class='" . $amountClass . "'>" . "₺" . htmlspecialchars($formattedAmount) . "</td>";
 
                     // Tarihi gün/ay/yıl formatına çevir
                     $date = new DateTime($candg['transaction_date']);

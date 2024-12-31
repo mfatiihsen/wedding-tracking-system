@@ -10,6 +10,17 @@ body {
   color: #333;
 }
 
+
+.container-logo {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 20px;
+  margin-bottom: 50px;
+}
+
 .sidebar {
   width: 220px;
   height: 100vh;
@@ -30,7 +41,6 @@ body {
 
 .sidebar h2 {
   font-size: 1.5rem;
-  margin-bottom: 50px;
   text-align: center;
 }
 
@@ -93,12 +103,14 @@ body {
 }
 
 .main-content {
-  padding-top: 60px;
   margin-left: 220px;
   transition: margin-left 0.3s;
+  padding: 60px 0px;
 }
 .main-content.hidden {
   margin-left: 0;
+  margin-top: 0;
+  padding: 0 0;
 }
 
 .navbar {
@@ -126,6 +138,84 @@ body {
   font-size: 1.25rem;
   font-weight: 600;
   text-align: left;
+}
+
+.db-status {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 5px 15px;
+  border-radius: 8px;
+  text-transform: uppercase;
+  transition: all 0.3s ease-in-out;
+}
+
+.db-status.active:hover{
+  background-color: #fff;
+  color: #2ecc71;
+  border: 1px solid #2ecc71;
+}
+
+/* Bağlantı başarılı (yeşil) */
+.db-status.active {
+  background-color: #2ecc71; /* Yeşil */
+  color: white;
+}
+
+.db-status.inactive:hover{
+  background-color: #fff;
+  color: #e74c3c;
+  border: 1px solid #e74c3c;
+}
+/* Bağlantı başarısız (kırmızı) */
+.db-status.inactive {
+  background-color: #e74c3c; /* Kırmızı */
+  color: white;
+}
+
+
+/* Durum simgesi (icon) */
+.status-icon {
+  margin-right: 8px;
+  font-size: 18px;
+}
+
+/* Durum metni */
+.status-text {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.current-datetime {
+  background-color: #3b82f6;
+  color: white;
+  border: 1px solid #fff;
+  border-radius: 8px;
+  padding: 5px;
+  margin-right: 10px;
+  display: flex;
+  transition: all 0.4s ease-in-out;
+}
+
+.current-datetime:hover{
+  background-color: white;
+  color: #3b82f6;
+  border: 1px solid #3b82f6;
+}
+
+/* Saat ve Veri tabanı durumu  */
+.row-date {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+/* İkonları sağlamak için Font Awesome */
+.fas {
+  font-size: 18px;
 }
 
 .btn {
@@ -161,9 +251,21 @@ body {
 }
 
 .hamburger {
-  display: block;
-  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1rem;
   cursor: pointer;
+}
+
+.hamburger i {
+  font-size: 1.5rem;
+}
+
+.hamburger p {
+  font-size: 1rem;
+  color: #333;
+  margin: 0;
 }
 
 .content {
@@ -200,6 +302,7 @@ body {
   margin-top: 10px;
 }
 
+/* Responsive Tasarım */
 @media (max-width: 768px) {
   .hamburger {
     display: block;

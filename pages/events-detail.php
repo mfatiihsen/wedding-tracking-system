@@ -4,24 +4,74 @@ ob_start();
 ?>
 
 <?php
-// // URL'den gelen gün parametresini alıyoruz
-// $day = isset($_GET['day']) ? $_GET['day'] : null;
+// URL'den gelen gün parametresini alıyoruz
+$day = isset($_GET['day']) ? $_GET['day'] : null;
 
-// // Etkinlik veritabanı bağlantısı (Örnek olarak PDO kullanılıyor)
-// $pdo = new PDO('mysql:host=localhost;dbname=events', 'root', ''); // Veritabanı bağlantınızı yapın
-// $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+// Etkinlik veritabanı bağlantısı (Örnek olarak PDO kullanılıyor)
+include('../model/db.php');
+include '../class/event-class.php';
+$db = new Database();
+$db = $db->conn;
 
-// // O güne ait etkinlikleri almak için sorgu
-// $stmt = $pdo->prepare("SELECT * FROM etkinlikler WHERE day = :day");
-// $stmt->execute(['day' => $day]);
-// $events = $stmt->fetchAll();
+$event = new Event($db);
+
+// Eğer gelen tarih parametresi varsa
+if ($day) {
+    // Bugünün yıl ve ay bilgilerini alıyoruz
+    $year = date('Y'); // Mevcut yıl
+    $month = date('m'); // Mevcut ay
+
+    // "Yıl-Ay-Gün" formatında tam bir tarih oluşturuyoruz
+    $fullDate = $year . '-' . $month . '-' . str_pad($day, 2, '0', STR_PAD_LEFT); // Gün tek haneli ise başına sıfır ekliyoruz.
+
+    // Sorgu: Belirtilen tarihteki etkinlikleri alıyoruz
+    $stmt = $db->prepare("SELECT * FROM event WHERE tarih = :tarih");
+    $stmt->execute(['tarih' => $fullDate]);
+
+    // Sorgudan dönen veriyi kontrol etme
+    $events = $stmt->fetchAll();
+} else {
+    $events = [];
+}
+
+$deleteMessage = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_event_id'])) {
+    $event->id = $_POST['delete_event_id'];
+    if ($event->delete()) {
+        $deleteMessage = 'Etkinlik başarıyla silindi.';
+    } else {
+        $deleteMessage = 'Etkinlik silinemedi.';
+    }
+}
+
+$eventTypeMapping = [
+    1 => 'Düğün',
+    2 => 'Kına',
+    3 => 'Nişan',
+    4 => 'Sünnet',
+    5 => 'Davet'
+];
+
+// Hizmet türü eşlemeleri
+$serviceTypeMapping = [
+    1 => 'Yemek,Fotoğraf,Müzik = 50.000',
+    2 => 'Yemek,Fotoğraf = 40.000',
+    3 => 'Fotoğraf,Müzik = 40.000',
+    4 => 'Yemek,Müzik = 40.000',
+    5 => 'Yemek = 20.000',
+    6 => 'Fotoğraf = 20.000',
+    7 => 'Müzik = 20.000'
+];
 ?>
-
-
-<main>
-
+<?php if ($deleteMessage): ?>
+    <script>
+        alert('<?php echo $deleteMessage; ?>');
+        window.location.href = 'index.php';
+    </script>
+<?php endif; ?>
+<div class="main-content">
     <section id="calendar-detail">
-
         <div class="event-detail-container">
             <header>
                 <h1>Etkinlikler - <span id="month-header">Ay</span> 2024</h1>
@@ -32,28 +82,42 @@ ob_start();
                     <table>
                         <thead>
                             <tr>
-                                <th>Etkinlik Adı</th>
                                 <th>Tarih</th>
-                                <th>Saat</th>
-                                <th>Konum</th>
+                                <th>Çift Adı</th>
+                                <th>Başlangıç Saati</th>
+                                <th>Davetli Sayısı</th>
+                                <th>Ücret</th>
                                 <th>Detaylar</th>
+                                <th>İşlem</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="event-item">
-                                <td>Konser</td>
-                                <td>15 Jan 2024</td>
-                                <td>19:00</td>
-                                <td>İstanbul</td>
-                                <td><button class="details-btn" onclick="showModal('event1')">Gör</button></td>
-                            </tr>
-                            <tr class="event-item">
-                                <td>Seminer</td>
-                                <td>20 Jan 2024</td>
-                                <td>10:00</td>
-                                <td>Çankaya</td>
-                                <td><button class="details-btn" onclick="showModal('event2')">Gör</button></td>
-                            </tr>
+                            <?php if ($events): ?>
+                                <?php foreach ($events as $event): ?>
+                                    <tr class="event-item">
+                                        <td><?php echo (new DateTime($event['tarih']))->format('d/m/Y'); ?></td>
+                                        <td><?php echo htmlspecialchars($event['gelinA'] . " ve " . $event['damatA']); ?></td>
+                                        <td><?php echo (new DateTime($event['basaat']))->format('H:i'); ?></td>
+                                        <!-- Etkinlik saati 'time' sütununda varsayalım -->
+                                        <td><?php echo htmlspecialchars($event['kisiSayisi'] . " Kişi"); ?></td>
+                                        <td><?php echo number_format($event['fiyat'], 2, ',', '.') . " ₺"; ?></td>
+                                        <!-- Etkinlik yeri 'location' sütununda varsayalım -->
+                                        <td><button class="details-btn"
+                                                onclick="showModal('<?php echo $event['id']; ?>')">Gör</button></td>
+
+                                        <td>
+                                            <form method="post" action="">
+                                                <input type="hidden" name="delete_event_id" value="<?php echo $event['id']; ?>">
+                                                <button type="submit" class="delete-btn">Sil</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="5">Bu tarihte etkinlik bulunmamaktadır.</td>
+                                </tr>
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
@@ -70,95 +134,58 @@ ob_start();
                 </div>
             </div>
         </div>
-</main>
-
-
+    </section>
+</div>
 <script>
     // Modal'ı açma fonksiyonu
-    function showModal(eventId) {
+    function showModal(id) {
         var content = "";
         var title = "";
+        console.log(id);
 
-        // Etkinlik içeriği
-        if (eventId === 'event1') {
-            title = "Konser";
+        // Etkinlik bilgilerini PHP'den alıyoruz
+        var event = <?php echo json_encode($events); ?>;
+        var eventTypeMapping = <?php echo json_encode($eventTypeMapping); ?>;
+        var serviceTypeMapping = <?php echo json_encode($serviceTypeMapping); ?>;
+        var selectedEvent = event.find(e => e.id == id); // Etkinliği buluyoruz
+
+        if (selectedEvent) {
+            // Ödeme durumunu kontrol et
+            const odemeDurumu = selectedEvent.odemeOnay === 1 ? 'Onaylanmadı' : 'Onaylandı';
+
+            // Etkinlik türü ve hizmet türünü metin olarak al
+            const davetTuru = eventTypeMapping[selectedEvent.davetTuru];
+            const hizmet = serviceTypeMapping[selectedEvent.hizmet];
+
             content = `
-            <div class="event-detail">
-                <h3>Etkinlik Adı: ${title}</h3>
-                <p><strong>Tarih:</strong> 15 Jan 2024</p>
-                <p><strong>Saat:</strong> 19:00</p>
-                <p><strong>Konum:</strong> İstanbul</p>
-                <p><strong>Detaylar:</strong> Bu etkinlik, ünlü bir sanatçının İstanbul'da vereceği konserdir. Sahne arkasında neler yaşanıyor, etkinlikte neler olacak gibi detaylar.</p>
-            </div>
-        `;
-        } else if (eventId === 'event2') {
-            title = "Seminer";
-            content = `
-            <div class="event-detail">
-                <h3>Etkinlik Adı: ${title}</h3>
-                <p><strong>Tarih:</strong> 20 Jan 2024</p>
-                <p><strong>Saat:</strong> 10:00</p>
-                <p><strong>Konum:</strong> Çankaya</p>
-                <p><strong>Detaylar:</strong> Bu seminer, teknoloji dünyasında yenilikçi konuları keşfetmek için mükemmel bir fırsattır.</p>
-            </div>
-        `;
+                    <div class="event-detail">
+                        <h3>Etkinlik Adı: ${davetTuru}</h3>
+                        <p><strong>Fiyat:</strong> ${selectedEvent.fiyat}</p>
+                        <p><strong>Gelin Adı:</strong> ${selectedEvent.gelinA}</p>
+                        <p><strong>Damat Adı:</strong> ${selectedEvent.damatA}</p>
+                        <p><strong>Telefon:</strong> ${selectedEvent.tel}</p>
+                        <p><strong>Mail Adresi:</strong> ${selectedEvent.mail}</p>
+                        <p><strong>Tarih:</strong> ${selectedEvent.tarih}</p>
+                        <p><strong>Başlangıç Saati:</strong> ${selectedEvent.basaat}</p>
+                        <p><strong>Bitiş Saati:</strong> ${selectedEvent.bisaat}</p>
+                        <p><strong>Kişi Sayısı:</strong> ${selectedEvent.kisiSayisi}</p>
+                        <p><strong>Hizmet:</strong> ${hizmet}</p>
+                        <p><strong>Ödeme Durumu:</strong> ${odemeDurumu}</p>
+                    </div>
+                `;
         }
 
-        // Modal başlığını ve içeriği güncelle
+        // Modal içeriğini güncelliyoruz
         document.getElementById('modal-content').innerHTML = content;
 
-        // Modal'ı göster
+        // Modal'ı gösteriyoruz
         document.getElementById('eventModal').style.display = "flex";
     }
 
-    // Modal'ı kapatma fonksiyonu
+    // Modal'ı kapama fonksiyonu
     function closeModal() {
         document.getElementById('eventModal').style.display = "none";
     }
-
-
-
-    // Etkinlik verisi
-    const events = {
-        1: [{
-                title: "Düğün Töreni",
-                date: "25 Ocak 2024",
-                description: "En özel gününüzü paylaşacağımız büyük an."
-            },
-            {
-                title: "Takı Töreni",
-                date: "27 Ocak 2024",
-                description: "Geleneksel takı töreni."
-            }
-        ],
-        2: [{
-            title: "Balayı Çıkışı Kutlaması",
-            date: "15 Şubat 2024",
-            description: "Balayı sonrası kutlama."
-        }],
-        3: [{
-            title: "Gelin Evi Ziyareti",
-            date: "10 Mart 2024",
-            description: "Gelin evine yapılan geleneksel ziyaret."
-        }],
-        4: [{
-            title: "Düğün Eğlencesi",
-            date: "5 Nisan 2024",
-            description: "Geleneksel düğün eğlencesi."
-        }],
-        // Diğer aylar için verileri burada ekleyebilirsiniz.
-    };
-
-    // URL'den ay bilgisini alma
-    const urlParams = new URLSearchParams(window.location.search);
-    const month = parseInt(urlParams.get('month'));
-
-    // Ay adı
-    const monthNames = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
-    document.getElementById("month-name").innerText = monthNames[month - 1];
-
-    // Etkinlikleri yükleme
-    const eventList = document.getElementById('event-list');
 </script>
 
 

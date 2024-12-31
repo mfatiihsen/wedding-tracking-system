@@ -19,7 +19,7 @@
   .customer-table {
     width: 100%;
     border-collapse: collapse;
-    margin: 20px 20px;
+    margin: 20px 0px;
   }
   
   .customer-table thead {
