@@ -9,8 +9,11 @@ $day = isset($_GET['day']) ? $_GET['day'] : null;
 
 // Etkinlik veritabanı bağlantısı (Örnek olarak PDO kullanılıyor)
 include('../model/db.php');
+include '../class/event-class.php';
 $db = new Database();
 $db = $db->conn;
+
+$event = new Event($db);
 
 // Eğer gelen tarih parametresi varsa
 if ($day) {
@@ -30,8 +33,43 @@ if ($day) {
 } else {
     $events = [];
 }
-?>
 
+$deleteMessage = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_event_id'])) {
+    $event->id = $_POST['delete_event_id'];
+    if ($event->delete()) {
+        $deleteMessage = 'Etkinlik başarıyla silindi.';
+    } else {
+        $deleteMessage = 'Etkinlik silinemedi.';
+    }
+}
+
+$eventTypeMapping = [
+    1 => 'Düğün',
+    2 => 'Kına',
+    3 => 'Nişan',
+    4 => 'Sünnet',
+    5 => 'Davet'
+];
+
+// Hizmet türü eşlemeleri
+$serviceTypeMapping = [
+    1 => 'Yemek,Fotoğraf,Müzik = 50.000',
+    2 => 'Yemek,Fotoğraf = 40.000',
+    3 => 'Fotoğraf,Müzik = 40.000',
+    4 => 'Yemek,Müzik = 40.000',
+    5 => 'Yemek = 20.000',
+    6 => 'Fotoğraf = 20.000',
+    7 => 'Müzik = 20.000'
+];
+?>
+<?php if ($deleteMessage): ?>
+    <script>
+        alert('<?php echo $deleteMessage; ?>');
+        window.location.href = 'index.php';
+    </script>
+<?php endif; ?>
 <div class="main-content">
     <section id="calendar-detail">
         <div class="event-detail-container">
@@ -50,6 +88,7 @@ if ($day) {
                                 <th>Davetli Sayısı</th>
                                 <th>Ücret</th>
                                 <th>Detaylar</th>
+                                <th>İşlem</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -58,13 +97,20 @@ if ($day) {
                                     <tr class="event-item">
                                         <td><?php echo (new DateTime($event['tarih']))->format('d/m/Y'); ?></td>
                                         <td><?php echo htmlspecialchars($event['gelinA'] . " ve " . $event['damatA']); ?></td>
-                                        <td><?php echo (new DateTime($event['saat']))->format('H:i'); ?></td>
+                                        <td><?php echo (new DateTime($event['basaat']))->format('H:i'); ?></td>
                                         <!-- Etkinlik saati 'time' sütununda varsayalım -->
                                         <td><?php echo htmlspecialchars($event['kisiSayisi'] . " Kişi"); ?></td>
                                         <td><?php echo number_format($event['fiyat'], 2, ',', '.') . " ₺"; ?></td>
                                         <!-- Etkinlik yeri 'location' sütununda varsayalım -->
                                         <td><button class="details-btn"
                                                 onclick="showModal('<?php echo $event['id']; ?>')">Gör</button></td>
+
+                                        <td>
+                                            <form method="post" action="">
+                                                <input type="hidden" name="delete_event_id" value="<?php echo $event['id']; ?>">
+                                                <button type="submit" class="delete-btn">Sil</button>
+                                            </form>
+                                        </td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
@@ -90,7 +136,6 @@ if ($day) {
         </div>
     </section>
 </div>
-
 <script>
     // Modal'ı açma fonksiyonu
     function showModal(id) {
@@ -100,28 +145,34 @@ if ($day) {
 
         // Etkinlik bilgilerini PHP'den alıyoruz
         var event = <?php echo json_encode($events); ?>;
-        var selectedEvent = event.find(e => e.id == id);  // Etkinliği buluyoruz
+        var eventTypeMapping = <?php echo json_encode($eventTypeMapping); ?>;
+        var serviceTypeMapping = <?php echo json_encode($serviceTypeMapping); ?>;
+        var selectedEvent = event.find(e => e.id == id); // Etkinliği buluyoruz
 
         if (selectedEvent) {
             // Ödeme durumunu kontrol et
             const odemeDurumu = selectedEvent.odemeOnay === 1 ? 'Onaylanmadı' : 'Onaylandı';
 
+            // Etkinlik türü ve hizmet türünü metin olarak al
+            const davetTuru = eventTypeMapping[selectedEvent.davetTuru];
+            const hizmet = serviceTypeMapping[selectedEvent.hizmet];
+
             content = `
-        <div class="event-detail">
-            <h3>Etkinlik Adı: ${selectedEvent.davetTuru}</h3>
-            <p><strong>Fiyat:</strong> ${selectedEvent.fiyat}</p>
-            <p><strong>Gelin Adı:</strong> ${selectedEvent.gelinA}</p>
-            <p><strong>Damat Adı:</strong> ${selectedEvent.damatA}</p>
-            <p><strong>Telefon:</strong> ${selectedEvent.tel}</p>
-            <p><strong>Mail Adresi:</strong> ${selectedEvent.mail}</p>
-            <p><strong>Tarih:</strong> ${selectedEvent.tarih}</p>
-            <p><strong>Saat:</strong> ${selectedEvent.saat}</p>
-            <p><strong>Bitiş Saati:</strong> ${selectedEvent.bsaat}</p>
-            <p><strong>Süre:</strong> ${selectedEvent.sure}</p>
-            <p><strong>Kişi Sayısı:</strong> ${selectedEvent.kisiSayisi}</p>
-            <p><strong>Ödeme Durumu:</strong> ${odemeDurumu}</p>
-        </div>
-    `;
+                    <div class="event-detail">
+                        <h3>Etkinlik Adı: ${davetTuru}</h3>
+                        <p><strong>Fiyat:</strong> ${selectedEvent.fiyat}</p>
+                        <p><strong>Gelin Adı:</strong> ${selectedEvent.gelinA}</p>
+                        <p><strong>Damat Adı:</strong> ${selectedEvent.damatA}</p>
+                        <p><strong>Telefon:</strong> ${selectedEvent.tel}</p>
+                        <p><strong>Mail Adresi:</strong> ${selectedEvent.mail}</p>
+                        <p><strong>Tarih:</strong> ${selectedEvent.tarih}</p>
+                        <p><strong>Başlangıç Saati:</strong> ${selectedEvent.basaat}</p>
+                        <p><strong>Bitiş Saati:</strong> ${selectedEvent.bisaat}</p>
+                        <p><strong>Kişi Sayısı:</strong> ${selectedEvent.kisiSayisi}</p>
+                        <p><strong>Hizmet:</strong> ${hizmet}</p>
+                        <p><strong>Ödeme Durumu:</strong> ${odemeDurumu}</p>
+                    </div>
+                `;
         }
 
         // Modal içeriğini güncelliyoruz
@@ -135,8 +186,8 @@ if ($day) {
     function closeModal() {
         document.getElementById('eventModal').style.display = "none";
     }
-
 </script>
+
 
 <?php
 $content = ob_get_clean();
